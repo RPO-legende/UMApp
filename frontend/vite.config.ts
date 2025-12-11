@@ -7,4 +7,12 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, '../backend/public'),
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
 });
