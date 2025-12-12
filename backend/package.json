@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "ts-node-dev --respawn src/server.ts",
-    "build": "tsc"
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "build-plus-frontend": "tsc && cd ../frontend && npm run build"
   },
   "dependencies": {
     "express": "^4.19.0",
