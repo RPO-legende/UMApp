@@ -13,6 +13,7 @@
   "dependencies": {
     "ejs": "^3.1.9",
     "express": "^4.19.0",
+    "joi": "^18.0.2",
     "swagger-ui-express": "^5.0.1",
     "tsoa": "^6.6.0"
   },
