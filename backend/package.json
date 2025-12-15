@@ -2,19 +2,27 @@
   "name": "backend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/server.ts",
+    "tsoa:spec": "tsoa spec",
+    "tsoa:routes": "tsoa routes",
+    "tsoa:gen": "npm run tsoa:spec && npm run tsoa:routes",
+    "dev": "nodemon",
     "start": "node dist/server.js",
-    "build": "tsc",
+    "build": "npm run tsoa:gen && tsc",
     "build-plus-frontend": "tsc && cd ../frontend && npm run build"
   },
   "dependencies": {
+    "ejs": "^3.1.9",
     "express": "^4.19.0",
-    "ejs": "^3.1.9"
+    "joi": "^18.0.2",
+    "swagger-ui-express": "^5.0.1",
+    "tsoa": "^6.6.0"
   },
   "devDependencies": {
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3",
     "@types/express": "^4.17.21",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
   }
 }
