@@ -1,0 +1,382 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"User": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"CreateUserDto": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 3
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"News": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"content"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"CreateNewsDto": {
+				"properties": {
+					"title": {
+						"type": "string",
+						"minLength": 3
+					},
+					"content": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": [
+					"title",
+					"content"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"UpdateNewsDto": {
+				"properties": {
+					"title": {
+						"type": "string",
+						"minLength": 3
+					},
+					"content": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": [
+					"title",
+					"content"
+				],
+				"type": "object",
+				"additionalProperties": true
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "backend",
+		"version": "1.0.0",
+		"contact": {}
+	},
+	"paths": {
+		"/users/{id}": {
+			"get": {
+				"operationId": "GetUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/users/newUser": {
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "notify",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateUserDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/profile/{id}": {
+			"get": {
+				"operationId": "GetProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Profile"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/news": {
+			"get": {
+				"operationId": "GetAllNews",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/News"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"News"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/news/{id}": {
+			"get": {
+				"operationId": "GetNews",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/News"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"News"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/news/newNews": {
+			"post": {
+				"operationId": "CreateNews",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/News"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"News"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "notify",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateNewsDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/news/changeNews/{id}": {
+			"put": {
+				"operationId": "UpdateNews",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/News"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"News"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateNewsDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/news/deleteNews/{id}": {
+			"delete": {
+				"operationId": "DeleteNews",
+				"responses": {
+					"204": {
+						"description": "Deleted"
+					}
+				},
+				"tags": [
+					"News"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
