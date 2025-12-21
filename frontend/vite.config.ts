@@ -14,7 +14,7 @@ export default defineConfig({
       manifest: {
         name: 'Vire React PWA',
         short_name: 'VirePWA',
-        description: 'Chess engine PWA',
+        description: 'UMApp PWA',
         theme_color: '#ffffff',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
