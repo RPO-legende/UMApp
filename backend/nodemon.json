@@ -1,0 +1,12 @@
+{
+  "watch": ["src"],
+  "ext": "ts,json",
+  "ignore": [
+    "src/swagger/**",
+    "src/tsoa-routes*",
+    "src/generated-api/**",
+    "dist/**",
+    "node_modules/**"
+  ],
+  "exec": "npm run tsoa:gen && ts-node src/server.ts"
+}
