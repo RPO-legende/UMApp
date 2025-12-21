@@ -42,7 +42,7 @@ public getUser(
  
   @SuccessResponse("201", "Created")
   // Swagger dokumentira status 201
-  @Post("newUser")
+  @Post("/")
   /**
    * @Body() bere JSON body in ga validira
    * @Query() bere query parameter iz URL-ja

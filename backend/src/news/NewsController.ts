@@ -56,7 +56,7 @@ export class NewsController extends Controller {
     return newsDb;
   }
 
-  @Get("{id}") //localhost:3000/news/num
+  @Get("{id}")
   public getNews(@Path() id: number): News {
     const found = newsDb.find(n => n.id === id);
 
@@ -71,7 +71,7 @@ export class NewsController extends Controller {
 
 
   @SuccessResponse("201", "Created")
-  @Post("newNews")
+  @Post("/")
   public createNews(
     @Body() body: CreateNewsDto,
     @Query() notify?: boolean
@@ -92,9 +92,9 @@ export class NewsController extends Controller {
     return created;
   }
 
-  // PUT /news/{id}
+  // PUT /{id}
   // Full update (client must send title + content)
-  @Put("changeNews/{id}")
+  @Put("{id}")
   public updateNews(
     @Path() id: number,
     @Body() body: UpdateNewsDto
@@ -117,7 +117,7 @@ export class NewsController extends Controller {
   }
 
   @SuccessResponse("204", "Deleted")
-  @Delete("deleteNews/{id}")
+  @Delete("{id}")
   public deleteNews(@Path() id: number): void {
     const index = newsDb.findIndex(n => n.id === id);
 
