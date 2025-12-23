@@ -10,10 +10,7 @@ import {
   Tags
 } from "tsoa";
 
-interface User {
-  id: number;
-  name: string;
-}
+import {User, usersDb, allocateUserId } from "../mockData";
 
 class CreateUserDto {
   /**
@@ -30,20 +27,18 @@ export class UserController extends Controller {
 
   
   @Get("{id}")
-  // @Path() bere parameter iz URL-ja in ga pretvori v number
-  // če ni number → 400 Bad Request
-  public getUser(
-    @Path() id: number,
+public getUser(
+  @Path() id: number
+): User {
+  const user = usersDb.find(u => u.id === id);
 
-    // @Query() bere query parameter iz URL-ja
-    // primer: ?uppercase=true
-    // TSOA ga avtomatsko pretvori v boolean
-    @Query() uppercase?: boolean
-  ): User {
-    const name = uppercase ? "ANA" : "Ana";
-    return { id, name };
+  if (!user) {
+    this.setStatus(404);
+    throw new Error("User not found");
   }
 
+  return user;
+}
  
   @SuccessResponse("201", "Created")
   // Swagger dokumentira status 201
@@ -59,12 +54,25 @@ export class UserController extends Controller {
     // uporabi se npr. za dodatno logiko (pošlji email ipd.)
     @Query() notify?: boolean
   ): User {
+    const created: User = {
+      id: allocateUserId(),
+      name: body.name,
+    };
+
+    usersDb.push(created);
+
+    if (notify) {
+      console.log("Notify user created:", created.id);
+    }
+
     this.setStatus(201);
 
     if (notify) {
       // tukaj bi npr. poslal email
       console.log("Notify user created");
     }
+
+    usersDb.push(created);
 
     return { id: 1, name: body.name };
   }
