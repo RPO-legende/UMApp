@@ -27,8 +27,8 @@ Thumbs.db
 *~
 
 # TSOA generated files (opcijsko - če želiš commitati)
-tsoa-routes/
-src/swagger/
+ tsoa-routes/
+ src/swagger/
 
 # Public folder (React build)
 public/assets/

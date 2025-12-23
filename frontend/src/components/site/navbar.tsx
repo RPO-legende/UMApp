@@ -27,6 +27,12 @@ export default function Navbar() {
         <Button asChild size="sm">
           <Link to="/about">Get started</Link>
         </Button>
+        <NavItem to ="/notes" label = "notes"/>
+          <Button asChild size="sm">
+             <Link to="/notes">Zapiski</Link>
+          </Button>
+        
+
       </nav>
     </header>
   )
