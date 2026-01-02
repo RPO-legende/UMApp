@@ -33,3 +33,4 @@ Thumbs.db
 # Public folder (React build)
 public/assets/
 public/index.html
+\.DS_Store
