@@ -1,4 +1,4 @@
-import { WiseTimetableProvider } from './WiseClient.ts';
+import { WiseTimetableProvider } from './WiseClient';
 
 async function main() {
     let wise;
