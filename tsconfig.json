@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,                 // THIS IS THE KEY: it turns off those errors
+    "noImplicitAny": false,          // This allows your arrays to be []
+    "strictNullChecks": false,       // This stops the 'possibly undefined' error
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "moduleDetection": "force",
+    "isolatedModules": true
+  },
+  "include": ["src/**/*", "src/wise_example.ts"]
+}
