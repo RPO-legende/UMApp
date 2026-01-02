@@ -7,6 +7,47 @@ function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 }
 
+function extractInviteCode(inviteUrl: string) {
+  try {
+    const url = new URL(inviteUrl)
+    const host = url.hostname.toLowerCase()
+    if (host === "discord.gg" || host === "www.discord.gg") {
+      const code = url.pathname.split("/").filter(Boolean)[0]
+      return code || null
+    }
+    if (host === "discord.com" || host === "www.discord.com") {
+      const parts = url.pathname.split("/").filter(Boolean)
+      if (parts[0] === "invite" && parts[1]) return parts[1]
+    }
+  } catch {
+    return null
+  }
+  return null
+}
+
+async function fetchInviteApi(inviteUrl: string): Promise<DiscordMeta | null> {
+  const code = extractInviteCode(inviteUrl)
+  if (!code) return null
+
+  const apiUrl = `https://discord.com/api/v9/invites/${code}?with_counts=true&with_expiration=true`
+  const res = await fetch(apiUrl, {
+    headers: {
+      "User-Agent": "UMAppBot/1.0",
+    },
+  })
+  if (!res.ok) return null
+
+  const data = await res.json().catch(() => null)
+  const guild = data?.guild
+  if (!guild?.name) return null
+
+  const iconUrl = guild.id && guild.icon
+    ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`
+    : undefined
+
+  return { name: guild.name, iconUrl }
+}
+
 function getMetaContent(html: string, key: string) {
   const re = new RegExp(
     `<meta\\s+[^>]*?(?:property|name)=[\"']${escapeRegExp(key)}[\"'][^>]*?>`,
@@ -60,6 +101,9 @@ export function normalizeInviteUrl(input: string) {
 }
 
 export async function fetchDiscordMeta(inviteUrl: string): Promise<DiscordMeta> {
+  const apiMeta = await fetchInviteApi(inviteUrl).catch(() => null)
+  if (apiMeta) return apiMeta
+
   const res = await fetch(inviteUrl, {
     headers: {
       "User-Agent": "UMAppBot/1.0",
