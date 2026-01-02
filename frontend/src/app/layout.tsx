@@ -6,7 +6,8 @@ export default function RootLayout() {
       <nav>
         <Link to="/">Home</Link>{" "}
         <Link to="/about">About</Link>{" "}
-        <Link to="/notes">Zapiski</Link>
+        <Link to="/notes">Zapiski</Link>{" "}
+        <Link to="/discord">Discord</Link>
       </nav>
       <Outlet />
     </div>
