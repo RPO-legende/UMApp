@@ -33,3 +33,6 @@ Thumbs.db
 # Public folder (React build)
 public/assets/
 public/index.html
+
+# Runtime storage (notes/discord index + uploaded files)
+storage/

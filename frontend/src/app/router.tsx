@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom"
 import AppLayout from "@/app/layout"
 import HomePage from "@/pages/Home"
 import AboutPage from "@/pages/About"
+import DiscordPage from "@/pages/Discord"
 import {
   NotesProgramsPage,
   NotesCoursesPage,
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/about", element: <AboutPage /> },
+      { path: "/discord", element: <DiscordPage /> },
       { path: "*", element: <NotFound /> },
        { path: "/notes", element: <NotesProgramsPage /> },
   { path: "/notes/program/:programId/year/:yearId", element: <NotesCoursesPage /> },
