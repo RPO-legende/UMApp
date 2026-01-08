@@ -46,6 +46,9 @@ export async function expressAuthentication(
           return reject(new Error("Unauthorized"));
         }
         
+        // Attach user to request object
+        request.user = user;
+        
         resolve(user);
       })(request, {} as Response, () => {});
     });

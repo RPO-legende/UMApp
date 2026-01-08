@@ -32,3 +32,8 @@ Thumbs.db
 # TSOA generated files (opcijsko - če želiš commitati)
 tsoa-routes/
 src/swagger/
+
+
+
+storage/**
+!storage/.gitkeep

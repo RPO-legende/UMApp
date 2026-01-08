@@ -69,7 +69,9 @@ CREATE TABLE RPO_Projekt.academic_year (
 -- Table: year_semester
 CREATE TABLE RPO_Projekt.year_semester (
   year_semester_id SERIAL PRIMARY KEY,
-  semester_number INT
+  semester_number INT,
+  date_start DATE,
+  date_end DATE
 );
 
 -- Table: track
@@ -355,4 +357,25 @@ CREATE TABLE RPO_Projekt.user_permission (
   is_allowed BOOLEAN NOT NULL,
   CONSTRAINT fk_user_permission_user1 FOREIGN KEY (FK_user_id) REFERENCES RPO_Projekt."user" (user_id),
   CONSTRAINT fk_user_permission_permission1 FOREIGN KEY (FK_permission_id) REFERENCES RPO_Projekt.permission (permission_id)
+);
+
+-- Table: note
+CREATE TABLE RPO_Projekt.note (
+  note_id VARCHAR(50) PRIMARY KEY,
+  title VARCHAR(200) NOT NULL,
+  description TEXT,
+  original_filename VARCHAR(255) NOT NULL,
+  file_path VARCHAR(500) NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  size_bytes BIGINT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FK_program_id INT NOT NULL,
+  FK_year_semester_id INT NOT NULL,
+  FK_course_id INT NOT NULL,
+  FK_uploader_user_id INT,
+  CONSTRAINT fk_note_study_program FOREIGN KEY (FK_program_id) REFERENCES RPO_Projekt.study_program (study_program_id),
+  CONSTRAINT fk_note_year_semester FOREIGN KEY (FK_year_semester_id) REFERENCES RPO_Projekt.year_semester (year_semester_id),
+  CONSTRAINT fk_note_course FOREIGN KEY (FK_course_id) REFERENCES RPO_Projekt.course (course_id),
+  CONSTRAINT fk_note_user FOREIGN KEY (FK_uploader_user_id) REFERENCES RPO_Projekt."user" (user_id)
 );

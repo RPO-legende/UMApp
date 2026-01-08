@@ -47,9 +47,17 @@ app.use("/api",router);
 RegisterRoutes(router);
 // Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// Page route
-app.get("/", (req, res) => {
-  res.render("index", { title: "Express + React" });
+
+// Error handling middleware for API routes
+app.use("/api", (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const status = err.status || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(status).json({ error: message });
+});
+
+// Serve React app for all non-API routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
 app.listen(PORT, () => {
