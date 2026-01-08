@@ -24,6 +24,7 @@ export default function Navbar() {
       <nav className="flex items-center gap-6">
         <NavItem to="/" label="Home" />
         <NavItem to="/about" label="About" />
+        <NavItem to="/Timetable" label="Timetable" />
         <Button asChild size="sm">
           <Link to="/about">Get started</Link>
         </Button>
