@@ -8,7 +8,8 @@
     "dev": "nodemon",
     "start": "node dist/server.js",
     "build": "npm run tsoa:gen && tsc",
-    "build-plus-frontend": "tsc && cd ../frontend && npm run build"
+    "build-plus-frontend": "tsc && cd ../frontend && npm run build",
+    "seed": "tsx src/seed.ts"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -38,6 +39,7 @@
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.9.3"
   }
 }
