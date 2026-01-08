@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     depends_on:
@@ -25,6 +27,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   pgdata:
