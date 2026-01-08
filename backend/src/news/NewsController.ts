@@ -1,4 +1,3 @@
-import path from "path";
 import {
   Body,
   Controller,
@@ -12,11 +11,16 @@ import {
   Delete,
   Put
 } from "tsoa";
+import sql from "../db";
 
 export interface News {
-  id: number;
+  news_id: number;
   title: string;
   content: string;
+  created_at?: Date;
+  published_at?: Date;
+  is_active?: boolean;
+  is_pinned?: boolean;
 }
 
 // Use a class (good for tsoa validation via JSDoc)
@@ -30,6 +34,9 @@ export class CreateNewsDto {
    * @minLength 1
    */
   public content!: string;
+  
+  public FK_created_by_user_id!: number;
+  public FK_faculty_id!: number;
 }
 
 export class UpdateNewsDto {
@@ -44,89 +51,98 @@ export class UpdateNewsDto {
   public content!: string;
 }
 
-// Simple in-memory "DB"
-const newsDb: News[] = [];
-let nextId = 1;
-
 @Route("news")
 @Tags("News")
 export class NewsController extends Controller {
   @Get() //localhost:3000/news
-  public getAllNews(): News[] {
-    return newsDb;
+  public async getAllNews(): Promise<News[]> {
+    const news = await sql`
+      SELECT * FROM RPO_Projekt.news
+      ORDER BY created_at DESC
+    `;
+    return news as unknown as News[];
   }
 
   @Get("{id}")
-  public getNews(@Path() id: number): News {
-    const found = newsDb.find(n => n.id === id);
+  public async getNews(@Path() id: number): Promise<News> {
+    const [found] = await sql`
+      SELECT * FROM RPO_Projekt.news
+      WHERE news_id = ${id}
+    `;
 
     if (!found) {
       this.setStatus(404);
-      // tsoa prefers throwing for errors; this is simplest
       throw new Error("News not found");
     }
 
-    return found;
+    return found as News;
   }
 
 
   @SuccessResponse("201", "Created")
   @Post("/")
-  public createNews(
+  public async createNews(
     @Body() body: CreateNewsDto,
     @Query() notify?: boolean
-  ): News {
-    const created: News = {
-      id: nextId++,
-      title: body.title,
-      content: body.content
-    };
-
-    newsDb.push(created);
+  ): Promise<News> {
+    const [created] = await sql`
+      INSERT INTO RPO_Projekt.news (title, content, created_at, is_active, is_pinned, FK_created_by_user_id, FK_faculty_id)
+      VALUES (
+        ${body.title},
+        ${body.content},
+        NOW(),
+        true,
+        false,
+        ${body.FK_created_by_user_id},
+        ${body.FK_faculty_id}
+      )
+      RETURNING *
+    `;
 
     if (notify) {
-      console.log("Notify: news created", created.id);
+      console.log("Notify: news created", created.news_id);
     }
 
     this.setStatus(201);
-    return created;
+    return created as News;
   }
 
   // PUT /{id}
   // Full update (client must send title + content)
   @Put("{id}")
-  public updateNews(
+  public async updateNews(
     @Path() id: number,
     @Body() body: UpdateNewsDto
-  ): News {
-    const index = newsDb.findIndex(n => n.id === id);
+  ): Promise<News> {
+    const [updated] = await sql`
+      UPDATE RPO_Projekt.news
+      SET title = ${body.title}, content = ${body.content}
+      WHERE news_id = ${id}
+      RETURNING *
+    `;
 
-    if (index === -1) {
+    if (!updated) {
       this.setStatus(404);
       throw new Error("News not found");
     }
 
-    const updated: News = {
-      id,
-      title: body.title,
-      content: body.content
-    };
-
-    newsDb[index] = updated;   // store it
-    return updated;            // return it
+    return updated as News;
   }
 
   @SuccessResponse("204", "Deleted")
   @Delete("{id}")
-  public deleteNews(@Path() id: number): void {
-    const index = newsDb.findIndex(n => n.id === id);
+  public async deleteNews(@Path() id: number): Promise<void> {
+    const result = await sql`
+      DELETE FROM RPO_Projekt.news
+      WHERE news_id = ${id}
+      RETURNING news_id
+    `;
 
-    if (index === -1) {
+    if (result.length === 0) {
       this.setStatus(404);
       throw new Error("News not found");
     }
 
-    newsDb.splice(index, 1);
     this.setStatus(204);
     return;
   }

@@ -9,14 +9,22 @@ import {
   SuccessResponse,
   Tags
 } from "tsoa";
+import sql from "../db";
 
-import {User, usersDb, allocateUserId } from "../mockData";
+export interface User {
+  user_id: number;
+  first_name?: string;
+  last_name?: string;
+  email: string;
+}
 
 class CreateUserDto {
   /**
    * @minLength 3
    */
-  public name: string;
+  public email: string;
+  public first_name?: string;
+  public last_name?: string;
 }
 
 // base path: /users
@@ -27,18 +35,21 @@ export class UserController extends Controller {
 
   
   @Get("{id}")
-public getUser(
-  @Path() id: number
-): User {
-  const user = usersDb.find(u => u.id === id);
+  public async getUser(
+    @Path() id: number
+  ): Promise<User> {
+    const [user] = await sql`
+      SELECT * FROM RPO_Projekt."user"
+      WHERE user_id = ${id}
+    `;
 
-  if (!user) {
-    this.setStatus(404);
-    throw new Error("User not found");
+    if (!user) {
+      this.setStatus(404);
+      throw new Error("User not found");
+    }
+
+    return user as User;
   }
-
-  return user;
-}
  
   @SuccessResponse("201", "Created")
   // Swagger dokumentira status 201
@@ -47,33 +58,30 @@ public getUser(
    * @Body() bere JSON body in ga validira
    * @Query() bere query parameter iz URL-ja
    */
-  public createUser(
+  public async createUser(
     @Body() body: CreateUserDto,
 
     // ?notify=true
     // uporabi se npr. za dodatno logiko (pošlji email ipd.)
     @Query() notify?: boolean
-  ): User {
-    const created: User = {
-      id: allocateUserId(),
-      name: body.name,
-    };
-
-    usersDb.push(created);
+  ): Promise<User> {
+    const [created] = await sql`
+      INSERT INTO RPO_Projekt."user" (email, first_name, last_name, created_at)
+      VALUES (
+        ${body.email},
+        ${body.first_name || null},
+        ${body.last_name || null},
+        NOW()
+      )
+      RETURNING *
+    `;
 
     if (notify) {
-      console.log("Notify user created:", created.id);
+      console.log("Notify user created:", created.user_id);
     }
 
     this.setStatus(201);
 
-    if (notify) {
-      // tukaj bi npr. poslal email
-      console.log("Notify user created");
-    }
-
-    usersDb.push(created);
-
-    return { id: 1, name: body.name };
+    return created as User;
   }
 }

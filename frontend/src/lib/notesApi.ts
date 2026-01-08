@@ -1,4 +1,6 @@
 const API = "/api"
+import { apiUpload } from "./api"
+
 export type Program = { id: string; name: string; yearsC: number}
 export type Course = { id: string; name: string; programId: string; year: number }
 export type NoteStatus = "APPROVED" | "PENDING" 
@@ -38,13 +40,8 @@ export const NotesApi = {
     handle(await fetch(`${API}/notes/moderation/${courseId}/notes`)),
   getAllNotes: async (courseId: string): Promise<Note[]> =>
     handle(await fetch(`${API}/notes/courses/${courseId}/notes/all`)),
-  uploadNote: async (form: FormData): Promise<{ id: string; status: NoteStatus }> => {
-    const res = await fetch(`${API}/notes/upload`, {
-      method: "POST",
-      body: form,
-    })
-    return handle(res)
-  },
+  uploadNote: async (form: FormData): Promise<{ id: string; status: NoteStatus }> => 
+    apiUpload('/notes/upload', form),
   approve: async (id: string): Promise<void> => {
     await handle(
       await fetch(`${API}/notes/${id}/approve`, { method: "POST" })
