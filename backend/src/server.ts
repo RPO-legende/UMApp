@@ -15,6 +15,9 @@ import swaggerDocument from "./swagger/swagger.json";
 const app = express();
 const PORT = 3000;
 
+// Middleware to parse JSON bodies
+app.use(express.json());
+
 // Set template engine
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
