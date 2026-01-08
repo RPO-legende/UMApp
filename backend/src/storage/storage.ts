@@ -248,11 +248,42 @@ export async function findFolderById(noteId: string): Promise<{ status: NoteStat
 
 //Najde absolutno pot do note-a
 export async function getFileAbsById(noteId: string) {
-  const found = await findFolderById(noteId)
-  if (!found) return null
-  const meta = await readMeta(found.folder)
-  const fileAbs = path.join(found.folder, safeName(meta.originalFilename))
-  return { meta, fileAbs }
+  const notes = await sql`
+    SELECT 
+      note_id,
+      original_filename,
+      file_path,
+      mime_type,
+      status,
+      FK_program_id::text as "programId",
+      FK_year_semester_id as year,
+      FK_course_id::text as "courseId"
+    FROM RPO_Projekt.note
+    WHERE note_id = ${noteId}
+    LIMIT 1
+  ` as any[];
+  
+  if (notes.length === 0) return null;
+  const note = notes[0];
+  
+  const status: NoteStatus = note.status as NoteStatus;
+  const folder = path.join(STORAGE_DIR, baseDir(status), note.programId, String(note.year), note.courseId, noteId);
+  const fileAbs = path.join(folder, safeName(note.original_filename));
+  
+  const meta: NoteMeta = {
+    id: note.note_id,
+    programId: note.programId,
+    year: note.year,
+    courseId: note.courseId,
+    title: '',
+    originalFilename: note.original_filename,
+    mimeType: note.mime_type,
+    sizeBytes: 0,
+    status: status,
+    createdAt: ''
+  };
+  
+  return { meta, fileAbs };
 }
 
 //Odobri note in ga premakne v approved direktorij
