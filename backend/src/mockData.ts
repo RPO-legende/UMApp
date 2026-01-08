@@ -1,9 +1,9 @@
-export interface User {
+export interface MockUser {
   id: number;
   name: string;
 }
 
-export const usersDb: User[] = [];
+export const usersDb: MockUser[] = [];
 export let nextUserId = 1;
 
 export function allocateUserId(): number {

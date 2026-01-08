@@ -9,7 +9,7 @@ import {
 } from "tsoa";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { authUsersDb, allocateAuthUserId } from "./authData";
+import { findUserByEmail, createUser } from "./authData";
 import { RegisterDto, LoginDto, AuthResponse } from "./types";
 import { JWT_SECRET } from "./passport";
 
@@ -25,7 +25,7 @@ export class AuthController extends Controller {
   @Post("register")
   public async register(@Body() body: RegisterDto): Promise<AuthResponse> {
     // Check if user already exists
-    const existingUser = authUsersDb.find((u) => u.email === body.email);
+    const existingUser = await findUserByEmail(body.email);
     
     if (existingUser) {
       this.setStatus(400);
@@ -41,15 +41,8 @@ export class AuthController extends Controller {
     // Hash password
     const passwordHash = await bcrypt.hash(body.password, 10);
 
-    // Create user
-    const newUser = {
-      id: allocateAuthUserId(),
-      email: body.email,
-      name: body.name,
-      passwordHash,
-    };
-
-    authUsersDb.push(newUser);
+    // Create user in database
+    const newUser = await createUser(body.email, body.name, passwordHash);
 
     // Generate JWT token
     const token = jwt.sign(
@@ -78,7 +71,7 @@ export class AuthController extends Controller {
   @Post("login")
   public async login(@Body() body: LoginDto): Promise<AuthResponse> {
     // Find user
-    const user = authUsersDb.find((u) => u.email === body.email);
+    const user = await findUserByEmail(body.email);
     
     if (!user) {
       this.setStatus(401);

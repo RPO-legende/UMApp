@@ -2,8 +2,8 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import bcrypt from "bcrypt";
-import { authUsersDb } from "./authData";
-import { AuthUser, JwtPayload } from "./types";
+import { findUserByEmail, findUserById } from "./authData";
+import { JwtPayload } from "./types";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-this-in-production";
 
@@ -16,7 +16,7 @@ passport.use(
     },
     async (email, password, done) => {
       try {
-        const user = authUsersDb.find((u) => u.email === email);
+        const user = await findUserByEmail(email);
         
         if (!user) {
           return done(null, false, { message: "Incorrect email or password" });
@@ -45,7 +45,7 @@ passport.use(
     },
     async (jwtPayload: JwtPayload, done) => {
       try {
-        const user = authUsersDb.find((u) => u.id === jwtPayload.userId);
+        const user = await findUserById(jwtPayload.userId);
         
         if (user) {
           return done(null, user);

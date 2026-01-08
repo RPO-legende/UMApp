@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { passport } from "./passport";
-import { AuthUser } from "./types";
+import { UserProfile } from "./types";
 
 // Extend Express Request type to include user
 declare global {
   namespace Express {
-    interface User extends AuthUser {}
+    interface User extends UserProfile {}
   }
 }
 
@@ -15,7 +15,7 @@ export const authenticateJWT = (
   res: Response,
   next: NextFunction
 ) => {
-  passport.authenticate("jwt", { session: false }, (err: any, user: AuthUser, info: any) => {
+  passport.authenticate("jwt", { session: false }, (err: any, user: UserProfile, info: any) => {
     if (err) {
       return next(err);
     }
@@ -28,3 +28,28 @@ export const authenticateJWT = (
     next();
   })(req, res, next);
 };
+
+// TSOA authentication handler
+export async function expressAuthentication(
+  request: Request,
+  securityName: string,
+  scopes?: string[]
+): Promise<any> {
+  if (securityName === "jwt") {
+    return new Promise((resolve, reject) => {
+      passport.authenticate("jwt", { session: false }, (err: any, user: UserProfile, info: any) => {
+        if (err) {
+          return reject(err);
+        }
+        
+        if (!user) {
+          return reject(new Error("Unauthorized"));
+        }
+        
+        resolve(user);
+      })(request, {} as Response, () => {});
+    });
+  }
+  
+  throw new Error("Unknown security name: " + securityName);
+}

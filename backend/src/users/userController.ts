@@ -11,7 +11,7 @@ import {
 } from "tsoa";
 import sql from "../db";
 
-interface User {
+export interface User {
   user_id: number;
   first_name?: string;
   last_name?: string;
@@ -48,7 +48,7 @@ export class UserController extends Controller {
       throw new Error("User not found");
     }
 
-    return user;
+    return user as User;
   }
  
   @SuccessResponse("201", "Created")
@@ -82,6 +82,6 @@ export class UserController extends Controller {
 
     this.setStatus(201);
 
-    return created;
+    return created as User;
   }
 }

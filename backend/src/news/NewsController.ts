@@ -60,7 +60,7 @@ export class NewsController extends Controller {
       SELECT * FROM RPO_Projekt.news
       ORDER BY created_at DESC
     `;
-    return news;
+    return news as unknown as News[];
   }
 
   @Get("{id}")
@@ -75,7 +75,7 @@ export class NewsController extends Controller {
       throw new Error("News not found");
     }
 
-    return found;
+    return found as News;
   }
 
 
@@ -104,7 +104,7 @@ export class NewsController extends Controller {
     }
 
     this.setStatus(201);
-    return created;
+    return created as News;
   }
 
   // PUT /{id}
@@ -126,7 +126,7 @@ export class NewsController extends Controller {
       throw new Error("News not found");
     }
 
-    return updated;
+    return updated as News;
   }
 
   @SuccessResponse("204", "Deleted")

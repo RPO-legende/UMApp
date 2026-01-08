@@ -7,9 +7,9 @@ import {
   Request,
   Security,
 } from "tsoa";
-import { AuthUser } from "../auth/types";
+import { UserProfile } from "../auth/types";
 
-interface UserProfile {
+interface ProfileResponse {
   id: number;
   email: string;
   name: string;
@@ -18,7 +18,7 @@ interface UserProfile {
 // Extend the Express Request type
 declare module "express-serve-static-core" {
   interface Request {
-    user?: AuthUser;
+    user?: UserProfile;
   }
 }
 
@@ -32,7 +32,7 @@ export class ProfileController extends Controller {
    */
   @Get("me")
   @Security("jwt")
-  public async getCurrentUser(@Request() request: any): Promise<UserProfile> {
+  public async getCurrentUser(@Request() request: any): Promise<ProfileResponse> {
     const user = request.user;
 
     if (!user) {
