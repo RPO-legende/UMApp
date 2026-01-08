@@ -3,6 +3,7 @@ import path from "path";
 import { Router } from "express";
 import fssync from "fs"
 import { getFileAbsById } from "./storage/storage"
+import { passport } from "./auth/passport";
 
 
 const router = Router();
@@ -20,6 +21,9 @@ app.set("views", path.join(process.cwd(), "views"));
 
 // Body parser (tsoa ga potrebuje)
 app.use(express.json());
+
+// Initialize Passport
+app.use(passport.initialize());
 
 // Static (React build gre sem)
 app.use(express.static(path.join(process.cwd(), "public")));

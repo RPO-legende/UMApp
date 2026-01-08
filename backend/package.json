@@ -11,17 +11,27 @@
     "build-plus-frontend": "tsc && cd ../frontend && npm run build"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "ejs": "^3.1.9",
     "express": "^4.19.0",
     "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "swagger-ui-express": "^5.0.1",
     "tsoa": "^6.6.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^20.0.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/passport-local": "^1.0.38",
     "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
