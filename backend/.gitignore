@@ -5,6 +5,9 @@ node_modules/
 dist/
 build/
 
+# Frontend build
+public/
+
 # Environment variables
 .env
 .env.local
@@ -29,6 +32,3 @@ Thumbs.db
 # TSOA generated files (opcijsko - če želiš commitati)
 tsoa-routes/
 src/swagger/
-
-# Public folder (React build)
-./public/**
