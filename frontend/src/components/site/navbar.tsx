@@ -35,6 +35,7 @@ export default function Navbar() {
           <NavItem to="/" label="Home" />
           <NavItem to="/about" label="About" />
           <NavItem to="/notes" label="Notes" />
+          <NavItem to ="/chat" label="Chat" />
 
           {isAuthenticated ? (
             <>
@@ -69,6 +70,7 @@ export default function Navbar() {
           <NavItem to="/" label="Home" />
           <NavItem to="/about" label="About" />
           <NavItem to="/notes" label="Notes" />
+          <NavItem to ="/chat" label="Chat" />
           <Button asChild size="sm" variant="outline">
             <Link to="/login">Login</Link>
           </Button>

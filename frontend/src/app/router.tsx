@@ -4,6 +4,7 @@ import HomePage from "@/pages/Home"
 import AboutPage from "@/pages/About"
 import LoginPage from "@/pages/Login"
 import RegisterPage from "@/pages/Register"
+import Chat from "@/pages/Chat"
 import {
   NotesProgramsPage,
   NotesCoursesPage,
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/about", element: <AboutPage /> },
+      { path: "/chat", element: <Chat /> },
       { path: "*", element: <NotFound /> },
        { path: "/notes", element: <NotesProgramsPage /> },
   { path: "/notes/program/:programId/year/:yearId", element: <NotesCoursesPage /> },
