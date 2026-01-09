@@ -1,55 +1,13 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Pencil, ArrowDownToLine, ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
+import { Pencil, ArrowDownToLine } from "lucide-react"
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-
-{ /* Dumy Data */}
-const subjects = [
-  {
-    name: "Operacijski sistemi",
-    groups: ["OS1", "OS2", "OS3", "OS4", "OS5", "OS6", "OS7"]
-  },
-  {
-    name: "Razvoj programske opreme",
-    groups: ["RPO1", "RPO2", "RPO3", "RPO4", "RPO5", "RPO6"]
-  },
-  {
-    name: "Računalniške arhitekture",
-    groups: ["RA1", "RA2", "RA3", "RA4", "RA5", "RA6", "RA7", "RA8"]
-  },
-  {
-    name: "Podatkovne baze",
-    groups: ["DB1", "DB2", "DB3", "DB4", "DB5", "DB6"]
-  },
-  {
-    name: "Mreže in komunikacije",
-    groups: ["MK1", "MK2", "MK3", "MK4", "MK5", "MK6", "MK7"]
-  },
-  {
-    name: "Algoritmi in podatkovne strukture",
-    groups: ["APS1", "APS2", "APS3", "APS4", "APS5", "APS6", "APS7", "APS8"]
-  },
-  {
-    name: "Programiranje 1",
-    groups: ["P1A", "P1B", "P1C", "P1D", "P1E", "P1F"]
-  },
-  {
-    name: "Programiranje 2",
-    groups: ["P2A", "P2B", "P2C", "P2D", "P2E", "P2F", "P2G"]
-  },
-  {
-    name: "Računalniška grafika",
-    groups: ["RG1", "RG2", "RG3", "RG4", "RG5", "RG6"]
-  },
-  {
-    name: "Umetna inteligenca",
-    groups: ["UI1", "UI2", "UI3", "UI4", "UI5", "UI6", "UI7", "UI8", "UI9"]
-  }
-]
+import { TimetableCalendarWrapper } from "@/lib/timetableComponent"
+import { subjects } from "@/lib/timetableData";
 
 export function GroupsWrapper() {
   const [visible, setVisible] = useState(false)
@@ -72,7 +30,7 @@ export function GroupsWrapper() {
   )
 }
 
-{ /* Komponenta za prikaz predmetov in njihovih skupin v mreži */ }
+// Komponenta za prikaz predmetov in njihovih skupin v mreži
 export function SubjectGroupsGrid() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -96,10 +54,13 @@ export function SubjectGroupsGrid() {
   )
 }
 
-
+// Osnovna zgradba strani
 export default function TimetablePage() {
+  // Za prikaz predmeta
+  const [open, setOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
   return (
-    <div className="min-h-screen min-w-[560px] bg-[#F1F9FB] flex flex-col items-center justify-start p-[5vw] gap-6">
+    <div className="min-h-screen w-full bg-[#F1F9FB] flex flex-col items-center pt-[2vw] px-[5vw] pb-[5vw] gap-6">
 
       {/* Zgornji frame */}
       <div className="w-full bg-transparent flex justify-between items-center">
@@ -195,33 +156,39 @@ export default function TimetablePage() {
             </DialogContent>
           </Dialog>
 
-
         </div>
       </div>
 
       {/* Spodaj shadcn Card */}
-      <Card className="w-full h-[726px]">
-        <CardHeader>
-          <div className="w-full bg-transparent flex justify-between items-center">
-            <div className="flex gap-2">
-              <Button variant="default"><ArrowLeftIcon className="h-4 w-4" /></Button>
-              <Button variant="default"><ArrowRightIcon className="h-4 w-4" /></Button>
-              <Button variant="default">Danes</Button>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="default">Mesec</Button>
-              <Button variant="default">Teden</Button>
-              <Button variant="default">Dan</Button>
-              <Button variant="default">Leto</Button>
-            </div>
-          </div>
-        </CardHeader>
-
+      <Card className="w-full h-full ">
         <CardContent>
-          Tukaj dodamo urnik.
+          <TimetableCalendarWrapper
+            onEventClick={(event) => {
+              setSelectedEvent(event);
+              setOpen(true);
+          }}
+/>
         </CardContent>
       </Card>
+      {/* Podroben prikaz učne enote s podatki */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selectedEvent?.title}</DialogTitle>
+          </DialogHeader>
 
-    </div>
+          {selectedEvent && (
+            <div className="space-y-1 text-sm">
+              <div><strong>Tip:</strong> {selectedEvent.type}</div>
+              <div><strong>Skupina:</strong> {selectedEvent.group}</div>
+              <div><strong>Predavatelj:</strong> {selectedEvent.lecturer}</div>
+              <div><strong>Prostor:</strong> {selectedEvent.location}</div>
+              <div><strong>Začetek:</strong> {selectedEvent.start?.toLocaleString()}</div>
+              <div><strong>Konec:</strong> {selectedEvent.end?.toLocaleString()}</div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+      </div>
   )
 }

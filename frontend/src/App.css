@@ -40,3 +40,19 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Za zaslone manjše od 640px - vertikalno zloži header urnika */
+@media (max-width: 640px) {
+
+  .fc .fc-toolbar-chunk {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .fc .fc-toolbar-title {
+    text-align: center;
+    margin-bottom: 0.25rem;
+  }
+}
