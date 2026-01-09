@@ -5,6 +5,9 @@ node_modules/
 dist/
 build/
 
+# Frontend build
+public/
+
 # Environment variables
 .env
 .env.local
@@ -30,6 +33,7 @@ Thumbs.db
 tsoa-routes/
 src/swagger/
 
-# Public folder (React build)
-public/assets/
-public/index.html
+
+
+storage/**
+!storage/.gitkeep

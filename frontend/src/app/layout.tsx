@@ -1,4 +1,5 @@
-import { Link, Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom"
+import Navbar from "@/components/site/navbar"
 
 export default function RootLayout() {
   return (
@@ -6,7 +7,6 @@ export default function RootLayout() {
       <nav>
         <Link to="/">Home</Link>{" "}
         <Link to="/about">About</Link>
-        <Link to="/timetable">Timetable</Link>
       </nav>
       <Outlet />
     </div>
