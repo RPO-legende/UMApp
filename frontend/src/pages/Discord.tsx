@@ -6,6 +6,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+const ADMIN_TOKEN = "umapp-admin"
+const IS_ADMIN = true
+
 function ServerAvatar({ server }: { server: DiscordServer }) {
   const fallback = useMemo(() => server.name?.trim()?.[0]?.toUpperCase() || "D", [server.name])
   return (
@@ -19,7 +22,23 @@ function ServerAvatar({ server }: { server: DiscordServer }) {
   )
 }
 
-function ServerCard({ server }: { server: DiscordServer }) {
+function ServerCard({
+  server,
+  isAdmin,
+  onRemove,
+}: {
+  server: DiscordServer
+  isAdmin: boolean
+  onRemove: (id: string) => void
+}) {
+  async function copyInvite() {
+    try {
+      await navigator.clipboard.writeText(server.inviteUrl)
+    } catch {
+      window.prompt("Copy invite link:", server.inviteUrl)
+    }
+  }
+
   return (
     <Card className="rounded-2xl group">
       <CardContent className="flex items-center gap-3 py-4">
@@ -28,11 +47,25 @@ function ServerCard({ server }: { server: DiscordServer }) {
           <p className="font-medium truncate">{server.name}</p>
           <p className="text-xs text-muted-foreground truncate">{server.inviteUrl}</p>
         </div>
-        <Button asChild className="rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
-          <a href={server.inviteUrl} target="_blank" rel="noreferrer">
-            Invite
-          </a>
-        </Button>
+        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button variant="outline" className="rounded-xl" onClick={copyInvite}>
+            Copy link
+          </Button>
+          <Button asChild className="rounded-xl">
+            <a href={server.inviteUrl} target="_blank" rel="noreferrer">
+              Invite
+            </a>
+          </Button>
+          {isAdmin ? (
+            <Button
+              variant="destructive"
+              className="rounded-xl"
+              onClick={() => onRemove(server.id)}
+            >
+              Remove
+            </Button>
+          ) : null}
+        </div>
       </CardContent>
     </Card>
   )
@@ -50,7 +83,7 @@ function AddServerDialog({ onAdded }: { onAdded: () => void }) {
     setErr("")
     setBusy(true)
     try {
-      await DiscordApi.addServer(inviteUrl.trim())
+      await DiscordApi.addServer(inviteUrl.trim(), ADMIN_TOKEN)
       setInviteUrl("")
       setOpen(false)
       onAdded()
@@ -111,6 +144,15 @@ export default function DiscordPage() {
     }
   }
 
+  async function removeServer(id: string) {
+    try {
+      await DiscordApi.removeServer(id, ADMIN_TOKEN)
+      setServers((prev) => prev.filter((server) => server.id !== id))
+    } catch (e: any) {
+      setErr(e?.message ?? "Failed to remove server")
+    }
+  }
+
   useEffect(() => {
     load()
   }, [])
@@ -122,7 +164,7 @@ export default function DiscordPage() {
           <h1 className="text-xl font-semibold">Discord</h1>
           <p className="text-sm text-muted-foreground">University Discord servers.</p>
         </div>
-        <AddServerDialog onAdded={load} />
+        {IS_ADMIN ? <AddServerDialog onAdded={load} /> : null}
       </div>
 
       {err ? <p className="text-sm text-destructive">{err}</p> : null}
@@ -130,7 +172,7 @@ export default function DiscordPage() {
 
       <div className="grid sm:grid-cols-2 gap-4">
         {servers.map((server) => (
-          <ServerCard key={server.id} server={server} />
+          <ServerCard key={server.id} server={server} isAdmin={IS_ADMIN} onRemove={removeServer} />
         ))}
       </div>
 

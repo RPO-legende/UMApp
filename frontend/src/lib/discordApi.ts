@@ -16,12 +16,25 @@ async function handle(res: Response) {
 
 export const DiscordApi = {
   listServers: async (): Promise<DiscordServer[]> => handle(await fetch(`${API}/discord`)),
-  addServer: async (inviteUrl: string): Promise<DiscordServer> =>
+  addServer: async (inviteUrl: string, adminToken?: string): Promise<DiscordServer> =>
     handle(
       await fetch(`${API}/discord`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(adminToken ? { "x-um-admin": adminToken } : {}),
+        },
         body: JSON.stringify({ inviteUrl }),
       })
     ),
+  removeServer: async (id: string, adminToken?: string): Promise<void> => {
+    await handle(
+      await fetch(`${API}/discord/${id}`, {
+        method: "DELETE",
+        headers: {
+          ...(adminToken ? { "x-um-admin": adminToken } : {}),
+        },
+      })
+    )
+  },
 }

@@ -60,3 +60,12 @@ export async function addServer(data: Omit<DiscordServer, "id" | "addedAt">): Pr
   await writeIndex(index)
   return server
 }
+
+export async function removeServer(id: string): Promise<boolean> {
+  const index = await readIndex()
+  const before = index.servers.length
+  index.servers = index.servers.filter((s) => s.id !== id)
+  if (index.servers.length === before) return false
+  await writeIndex(index)
+  return true
+}
