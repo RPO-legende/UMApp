@@ -6,6 +6,7 @@
     "specVersion": 3
     },
     "routes":{
-        "routesDir": "src/tsoa-routes"
+        "routesDir": "src/tsoa-routes",
+        "authenticationModule": "src/auth/middleware.ts"
     }
 }

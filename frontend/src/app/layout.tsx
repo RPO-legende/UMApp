@@ -1,13 +1,10 @@
-import { Link, Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom"
+import Navbar from "@/components/site/navbar"
 
 export default function RootLayout() {
   return (
     <div>
-      <nav>
-        <Link to="/">Home</Link>{" "}
-        <Link to="/about">About</Link>{" "}
-        <Link to="/notes">Zapiski</Link>
-      </nav>
+      <Navbar />
       <Outlet />
     </div>
   )

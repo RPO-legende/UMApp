@@ -13,6 +13,7 @@ import {
   Middlewares,
   Request,
   Delete,
+  Security,
 } from "tsoa"
 import {
   NoteMeta,
@@ -53,6 +54,7 @@ export class NotesController extends Controller {
 podatek o zapisku to pomeni smer, letnik, kateri predmet je. Nato pa še tisti podatke vpišen v glavni index kjer so shranjeni vsi zapiski.
 */
   @Post("/upload")
+  @Security("jwt")
   @Middlewares(upload.single("file")as any)
   public async upload(@Request() req: express.Request): Promise<{ id: string; status: "PENDING" }> {
     const file = (req as any).file as Express.Multer.File | undefined
@@ -65,6 +67,13 @@ podatek o zapisku to pomeni smer, letnik, kateri predmet je. Nato pa še tisti p
     const title = String(req.body.title || "").trim()
     const description = String(req.body.description || "").trim()
     
+    // Get user from JWT token
+    const user = (req as any).user
+    const uploaderId = user?.id
+    
+    if (!uploaderId) {
+      throw Object.assign(new Error("User not authenticated"), { status: 401 })
+    }
 
     if (!programId || !Number.isFinite(year) || !courseId || title.length < 2) {
       throw Object.assign(new Error("Missing required fields"), { status: 400 })
@@ -88,7 +97,7 @@ podatek o zapisku to pomeni smer, letnik, kateri predmet je. Nato pa še tisti p
       sizeBytes: file.size,
       status: "PENDING",
       createdAt: new Date().toISOString(),
-      
+      uploaderId,
     }
     await writeMeta(folder, meta)
     const fileRelative = path.relative("./storage", fileAbs).replace(/\\/g, "/")
