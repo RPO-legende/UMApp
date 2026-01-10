@@ -34,7 +34,7 @@ export default function Register() {
 
     try {
       await register(email, name, password);
-      navigate('/');
+      navigate('/welcome');
     } catch (err: any) {
       setError(err.message || 'Failed to register');
     } finally {
