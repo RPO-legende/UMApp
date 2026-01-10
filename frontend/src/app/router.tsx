@@ -4,6 +4,7 @@ import HomePage from "@/pages/Home"
 import AboutPage from "@/pages/About"
 import LoginPage from "@/pages/Login"
 import RegisterPage from "@/pages/Register"
+import {ProfilePage} from "@/pages/Profile"
 import {
   NotesProgramsPage,
   NotesCoursesPage,
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/profile",
+    element: <ProfilePage />
   },
   {
     element: <AppLayout />,
