@@ -34,15 +34,15 @@ export class WiseTimetableProvider {
 
         const basic = Buffer.from(secret).toString('base64');
         const loginRes = await fetch(AUTH_URL + "login", { headers: { "Authorization": "Basic " + basic } });
-        const loginData = await loginRes.json();
+        const loginData = await loginRes.json() as any;
         const token = loginData.token;
 
         const urlRes = await fetch(`${AUTH_URL}url?schoolCode=${userSchoolCode}&language=slo`, { headers: { "Authorization": "Bearer " + token } });
-        const urlData = await urlRes.json();
+        const urlData = await urlRes.json() as any;
         const serverUrl = urlData.server.replace('http://', 'https://');
 
         const codeRes = await fetch(`${serverUrl}schoolCode?schoolCode=${userSchoolCode}&language=slo`, { headers: { "Authorization": "Bearer " + token } });
-        const codeData = await codeRes.json();
+        const codeData = await codeRes.json() as any;
 
         return new WiseTimetableProvider(token, serverUrl, codeData.schoolCode);
     }
@@ -141,7 +141,7 @@ export class WiseTimetableProvider {
 
     private async getWithToken(url: string) {
         const res = await fetch(url, { headers: { "Authorization": "Bearer " + this.token } });
-        return await res.json();
+        return await res.json() as any;
     }
 
     private async getGroupsForBranch(branchId: string) {
