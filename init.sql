@@ -35,6 +35,17 @@ CREATE TABLE RPO_Projekt.user_role (
   CONSTRAINT fk_user_role_role1 FOREIGN KEY (FK_role_id) REFERENCES RPO_Projekt.role (role_id)
 );
 
+-- Table: discord_server
+CREATE TABLE RPO_Projekt.discord_server (
+  discord_server_id SERIAL PRIMARY KEY,
+  invite_url TEXT UNIQUE NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  icon_url TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FK_created_by_user_id INT,
+  CONSTRAINT fk_discord_server_user FOREIGN KEY (FK_created_by_user_id) REFERENCES RPO_Projekt."user" (user_id)
+);
+
 -- Table: program_type
 CREATE TABLE RPO_Projekt.program_type (
   program_type_id SERIAL PRIMARY KEY,
