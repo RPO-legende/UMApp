@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
        { path: "/notes", element: <NotesProgramsPage /> },
   { path: "/notes/program/:programId/year/:yearId", element: <NotesCoursesPage /> },
   { path: "/notes/program/:programId/year/:yearId/course/:courseId", element: <NotesCoursePage /> },
-  { path: "/notes/moderation/program/:programId/year/:yearId/course/:courseId", element: <NotesCourseModerationPage /> },
-    ],
+  { path: "/notes/moderation/program/:programId/year/:yearId/course/:courseId", element: <NotesCourseModerationPage /> }
+,    ],
   },
 ])

@@ -21,7 +21,6 @@ WORKDIR /app
 # Copy backend built files
 COPY --from=backend-builder /app/backend/dist ./dist
 COPY --from=backend-builder /app/backend/package*.json ./
-COPY --from=backend-builder /app/backend/views ./views
 
 # Copy frontend built files to backend's public folder
 COPY --from=frontend-builder /app/frontend/dist ./public
