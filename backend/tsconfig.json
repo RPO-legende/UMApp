@@ -12,5 +12,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "useDefineForClassFields": false
-  }
+  },
+    "include": ["src/**/*", "src/wise_example.ts"]
 }
