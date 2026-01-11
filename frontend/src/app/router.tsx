@@ -3,6 +3,7 @@ import WelcomePage from "@/pages/WelcomePage"
 import AppLayout from "@/app/layout"
 import HomePage from "@/pages/Home"
 import AboutPage from "@/pages/About"
+import TimetablePage from "@/pages/Timetable"
 import LoginPage from "@/pages/Login"
 import RegisterPage from "@/pages/Register"
 import {
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
     children: [
      {path:"/welcome", element: <WelcomePage/>},
       { path: "/about", element: <AboutPage /> },
+      { path: "/timetable", element: <TimetablePage /> },
       { path: "*", element: <NotFound /> },
        { path: "/notes", element: <NotesProgramsPage /> },
   { path: "/notes/program/:programId/year/:yearId", element: <NotesCoursesPage /> },

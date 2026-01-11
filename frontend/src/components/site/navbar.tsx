@@ -35,6 +35,7 @@ export default function Navbar() {
           <NavItem to="/" label="Home" />
           <NavItem to="/about" label="About" />
           <NavItem to="/notes" label="Notes" />
+          <NavItem to="/timetable" label="Timetable" />
 
           {isAuthenticated ? (
             <>
