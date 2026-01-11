@@ -6,6 +6,7 @@ import AboutPage from "@/pages/About"
 import TimetablePage from "@/pages/Timetable"
 import LoginPage from "@/pages/Login"
 import RegisterPage from "@/pages/Register"
+import Chat from "@/pages/Chat"
 import {
   NotesProgramsPage,
   NotesCoursesPage,
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
      {path:"/welcome", element: <WelcomePage/>},
       { path: "/about", element: <AboutPage /> },
       { path: "/timetable", element: <TimetablePage /> },
+      { path: "/chat", element: <Chat /> },
       { path: "*", element: <NotFound /> },
        { path: "/notes", element: <NotesProgramsPage /> },
   { path: "/notes/program/:programId/year/:yearId", element: <NotesCoursesPage /> },
