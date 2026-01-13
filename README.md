@@ -33,3 +33,22 @@ Potrebujete naložen [Node.js](https://nodejs.org/) ter [npm](https://docs.npmjs
 Backend (z zadnjo zbuildano verzijo frontend-a, zapakirano v njem) je na voljo na [http://localhost:3000](http://localhost:3000) in frontend (ki se posodablja s kodo) na [http://localhost:5173](http://localhost:5173).
 
 Priporočljiva je uporaba [http://localhost:5173](http://localhost:5173).
+
+
+## Postavitev z Docker
+
+Potrebujete naložen [Docker](https://www.docker.com/get-started/).
+1. Klonirajte repozitorij:
+```bash
+   git clone git@github.com:RPO-legende/UMApp.git
+   cd UMApp
+```
+2. Zgradite in zaženite Docker kontejnerje:
+```bash
+   docker-compose up --build
+```
+Aplikacija bo na voljo na [http://localhost:3000](http://localhost:3000).
+
+## Prispevanje
+
+Razvoj se dogaja v `feature` vejah, ki se nato združijo v `main` preko pull requestov. Predlagamo, da za vsako večjo spremembo ustvarite svojo vejo.
