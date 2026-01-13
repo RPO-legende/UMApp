@@ -11,14 +11,13 @@ export type ShraniSkupinoBody = {
 @Route("api/users")
 @Tags("ModulSkupine")
 export class GroupsController extends Controller {
-  @Get("{userId}/modules/{programId}/years/{year}/groups")
+  @Get("{userId}/modules/{programId}/years/{year}/grades/{grade}/groups")
   public async getSkupine(
     @Path() userId: number,
     @Path() programId: string,
-    @Path() year: number
+    @Path() year: number,
+    @Path() grade: number
   ) {
-    // Assumption: programId == study_program.code (seed uses 'RI', 'RM')
-    // Assumption: year == track.FK_year_semester_id (year_semester_id)
     const rows = await sql<PredmetSkupina[]>`
       SELECT
         c.course_code AS "predmetId",
@@ -34,6 +33,7 @@ export class GroupsController extends Controller {
       WHERE cgm.fk_user_id = ${userId}
         AND sp.code = ${programId}
         AND t.fk_year_semester_id = ${year}
+        AND t.grade = ${grade}
       ORDER BY c.course_code, cg.label
     `;
 
@@ -41,20 +41,22 @@ export class GroupsController extends Controller {
       userId,
       programId,
       year,
+      grade,
       enabled: rows.length > 0,
       skupine: rows,
     };
   }
 
-  @Put("{userId}/modules/{programId}/years/{year}/groups")
+  @Put("{userId}/modules/{programId}/years/{year}/grades/{grade}/groups")
   public async shraniSkupine(
     @Path() userId: number,
     @Path() programId: string,
     @Path() year: number,
+    @Path() grade: number,
     @Body() body: ShraniSkupinoBody
   ) {
     return await sql.begin(async (tx: any) => {
-      //delete existing memberships in scope
+      // delete existing memberships in scope
       await tx.unsafe(
         `
         DELETE FROM RPO_Projekt.course_group_member cgm
@@ -73,15 +75,16 @@ export class GroupsController extends Controller {
           AND cgm.fk_user_id = $1
           AND sp.code = $2
           AND t.fk_year_semester_id = $3
+          AND t.grade = $4
         `,
-        [userId, programId, year]
+        [userId, programId, year, grade]
       );
 
       if (!body.enabled || body.skupine.length === 0) {
-        return { userId, programId, year, enabled: false, skupine: [] };
+        return { userId, programId, year, grade, enabled: false, skupine: [] };
       }
 
-      //insert new memberships
+      // insert new memberships
       for (const s of body.skupine) {
         const found = (await tx.unsafe(
           `
@@ -97,15 +100,16 @@ export class GroupsController extends Controller {
             AND cg.label = $2
             AND sp.code = $3
             AND t.fk_year_semester_id = $4
+            AND t.grade = $5
           LIMIT 1
           `,
-          [s.predmetId, s.skupina, programId, year]
+          [s.predmetId, s.skupina, programId, year, grade]
         )) as { course_group_id: number }[];
 
         if (!found || found.length === 0) {
           this.setStatus(400);
           throw new Error(
-            `Group not found: predmetId=${s.predmetId}, skupina=${s.skupina}, program=${programId}, year=${year}`
+            `Group not found: predmetId=${s.predmetId}, skupina=${s.skupina}, program=${programId}, year=${year}, grade=${grade}`
           );
         }
 
@@ -118,7 +122,7 @@ export class GroupsController extends Controller {
         );
       }
 
-      return { userId, programId, year, enabled: true, skupine: body.skupine };
+      return { userId, programId, year, grade, enabled: true, skupine: body.skupine };
     });
   }
 }
