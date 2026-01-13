@@ -7,6 +7,7 @@ import TimetablePage from "@/pages/Timetable"
 import LoginPage from "@/pages/Login"
 import RegisterPage from "@/pages/Register"
 import Chat from "@/pages/Chat"
+import DiscordPage from "@/pages/Discord"
 import {
   NotesProgramsPage,
   NotesCoursesPage,
@@ -35,6 +36,7 @@ export const router = createBrowserRouter([
       { path: "/about", element: <AboutPage /> },
       { path: "/timetable", element: <TimetablePage /> },
       { path: "/chat", element: <Chat /> },
+      { path: "/discord", element: <DiscordPage /> },
       { path: "*", element: <NotFound /> },
        { path: "/notes", element: <NotesProgramsPage /> },
   { path: "/notes/program/:programId/year/:yearId", element: <NotesCoursesPage /> },
